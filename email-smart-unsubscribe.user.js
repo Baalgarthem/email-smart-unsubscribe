@@ -90,6 +90,8 @@
             'cancel email subscription',
             'cancel subscription',
             'darse de baja',
+            'aquí',
+            'aqui',
             'darme de baja',
             'dar de baja',
             'cancelar suscripcion',
