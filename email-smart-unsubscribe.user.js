@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Email Smart Unsubscribe
 // @namespace    https://github.com/Baalgarthem/
-// @version      2.9.1
+// @version      2.8.2
 // @description  Detecta enlaces para cancelar suscripciones en correos abiertos de Gmail y Outlook, y muestra un botón de confirmación.
 // @author       Baalgarthem
-// @icon         https://raw.githubusercontent.com/Baalgarthem/email-smart-unsubscribe/refs/heads/principal/media/email-smart-unsubscribe.ico
+// @icon         https://raw.githubusercontent.com/Baalgarthem/email-smart-unsubscribe/principal/media/email-smart-unsubscribe.ico
 // @downloadURL  https://raw.githubusercontent.com/Baalgarthem/email-smart-unsubscribe/principal/email-smart-unsubscribe.user.js
 // @updateURL    https://raw.githubusercontent.com/Baalgarthem/email-smart-unsubscribe/principal/email-smart-unsubscribe.user.js
 // @match        https://mail.google.com/*
