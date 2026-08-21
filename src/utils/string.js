@@ -177,3 +177,32 @@ export function calcularCoincidenciaDifusa(texto) {
 
     return mejorSimilitud;
 }
+
+export function encontrarIndiceFrase(texto, listaFrases) {
+    const textoNormalizado = normalizarTexto(texto);
+    let mejorIndice = -1;
+
+    for (const frase of listaFrases) {
+        const fraseNormalizada = normalizarTexto(frase);
+        const indice = textoNormalizado.indexOf(fraseNormalizada);
+        if (indice !== -1) {
+            // Guardamos la primera que aparezca o ajustamos heurísticas
+            if (mejorIndice === -1 || indice < mejorIndice) {
+                mejorIndice = indice;
+            }
+        }
+    }
+
+    return mejorIndice;
+}
+
+export function calcularDistanciaSemantica(texto, grupoA, grupoB) {
+    const indiceA = encontrarIndiceFrase(texto, grupoA);
+    const indiceB = encontrarIndiceFrase(texto, grupoB);
+
+    if (indiceA === -1 || indiceB === -1) {
+        return Infinity;
+    }
+
+    return Math.abs(indiceA - indiceB);
+}

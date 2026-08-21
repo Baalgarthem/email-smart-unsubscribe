@@ -1,9 +1,9 @@
 import { estado } from '../config/state.js';
 import { configuracion, patronHrefBaja, patronDominioMarketing } from '../config/constants.js';
 import { frases } from '../config/phrases.js';
-import { normalizarTexto, dividirEnPalabras, encontrarMejorFrase, contarCoincidencias, calcularCoincidenciaDifusa, calcularSimilitudJaccard } from '../utils/string.js';
+import { normalizarTexto, dividirEnPalabras, encontrarMejorFrase, contarCoincidencias, calcularCoincidenciaDifusa, calcularSimilitudJaccard, calcularDistanciaSemantica } from '../utils/string.js';
 import { convertirScoreAProbabilidad, convertirProbabilidadAPorcentaje } from '../utils/math.js';
-import { elementoEsVisible, obtenerTextoPropio, obtenerContextoCercano, obtenerHrefAbsoluto, obtenerTextoDeAtributos, elementoPareceEstarEnFooter, elementoTieneAccionDirecta, limpiarCacheContexto } from '../utils/dom.js';
+import { elementoEsVisible, obtenerTextoPropio, obtenerContextoCercano, obtenerHrefAbsoluto, obtenerTextoDeAtributos, elementoPareceEstarEnFooter, elementoTieneAccionDirecta, limpiarCacheContexto, obtenerHuellaVisual, elementoCercaDePixelRastreo, esBotonNativoDeCorreo } from '../utils/dom.js';
 import { obtenerDocumentosExplorables, obtenerRaicesDeBusqueda, obtenerCandidatos } from './scanner.js';
 import { actualizarPanelDiagnostico } from '../ui/interface.js';
 
@@ -43,16 +43,42 @@ export function evaluarElemento(elemento) {
         `${textoPropio} ${href} ${contexto}`
     );
 
+    if (esBotonNativoDeCorreo(elemento)) {
+        return crearResultado(elemento, configuracion.pesos.botonNativoCorreo, ['Botón nativo inyectado por el cliente de correo']);
+    }
+
     if (textoPropio.length < 2 && href.length < 5) {
-        return crearResultado(
-            elemento,
-            0,
-            ['Sin texto ni enlace útil']
-        );
+        return crearResultado(elemento, 0, ['Sin texto ni enlace útil']);
     }
 
     let score = 0;
     const razones = [];
+
+    // Análisis NLP y Semántico Avanzado
+    const distanciaIntencion = calcularDistanciaSemantica(textoCompleto, frases.verbosParada, frases.accionesEnlace);
+    if (distanciaIntencion <= 20 && contarCoincidencias(textoCompleto, frases.sustantivosComunicacion) > 0) {
+        score += configuracion.pesos.proximidadSemanticaEstricta;
+        razones.push('Proximidad NLP: Intención de baja muy cerca de acción de enlace');
+    } else if (
+        contarCoincidencias(textoCompleto, frases.verbosParada) > 0 &&
+        contarCoincidencias(textoCompleto, frases.sustantivosComunicacion) > 0 &&
+        contarCoincidencias(textoCompleto, frases.accionesEnlace) > 0
+    ) {
+        score += configuracion.pesos.deteccionAlgoritmicaContextual;
+        razones.push('Detección algorítmica: Intención de parada + Comunicación + Enlace');
+    }
+
+    // Análisis Topológico y Visual (Estilometría)
+    const huellaVisual = obtenerHuellaVisual(elemento);
+    if (huellaVisual.esPequeno || huellaVisual.esSemiOculto) {
+        score += configuracion.pesos.huellaVisualDiscreta;
+        razones.push('Estilometría: Huella visual de baja (texto pequeño o difuminado)');
+    }
+
+    if (elementoCercaDePixelRastreo(elemento)) {
+        score += configuracion.pesos.cercaniaPixelRastreo;
+        razones.push('Topología: Enlace cercano a píxel de rastreo o baliza');
+    }
 
     const fraseCritica = encontrarMejorFrase(textoCompleto, frases.criticas);
     const fraseAlta = encontrarMejorFrase(textoCompleto, frases.altas);
@@ -77,15 +103,6 @@ export function evaluarElemento(elemento) {
     if (fraseBaja) {
         score += configuracion.pesos.fraseBaja;
         razones.push(`Frase baja: ${fraseBaja}`);
-    }
-
-    const tieneVerboParada = contarCoincidencias(textoCompleto, frases.verbosParada) > 0;
-    const tieneSustantivoCom = contarCoincidencias(textoCompleto, frases.sustantivosComunicacion) > 0;
-    const tieneAccionEnlace = contarCoincidencias(textoCompleto, frases.accionesEnlace) > 0;
-
-    if (tieneVerboParada && tieneSustantivoCom && tieneAccionEnlace) {
-        score += configuracion.pesos.deteccionAlgoritmicaContextual;
-        razones.push('Detección algorítmica: Intención de parada + Comunicación + Enlace');
     }
 
     if (patronHrefBaja.test(href)) {

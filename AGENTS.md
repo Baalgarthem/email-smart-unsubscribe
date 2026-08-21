@@ -9,7 +9,7 @@ El proyecto cuenta con un entorno modular gestionado con `esbuild` para generar 
 ## Estructura
 
 - `src/`: Código fuente modular (separado en utils, config, core, ui).
-- `docs/`: Documentación técnica (requisitos, funciones, bugs, módulos, diario de desarrollo) y archivo base `legacy_email-smart-unsubscribe.user.js` como referencia/backup.
+- `docs/`: Documentación técnica (requisitos, funciones, bugs, módulos, historial de cambios) y archivo base `legacy_email-smart-unsubscribe.user.js` como referencia/backup.
 - `dist/`: Archivos construidos para distribución (ej. `dist/email-smart-unsubscribe.user.js` generado por esbuild).
 
 ## Convenciones de trabajo
@@ -30,7 +30,8 @@ El proyecto cuenta con un entorno modular gestionado con `esbuild` para generar 
 ## Protocolos Obligatorios
 
 1. **Gestión de Errores (Bug Trace):** Todo bug sin excepción se debe revisar, reportar y analizar desde el archivo `docs/bug-trace.md`, siguiendo estrictamente la estructura tabular y las reglas irrevocables definidas en la cabecera de ese archivo.
-2. **Registro de Cambios (Diario de Desarrollo):** Todo cambio en el código se debe documentar obligatoriamente en el archivo `docs/desarrollo.md`. El archivo debe estar seccionado por módulos. Si se crea un nuevo módulo, se añade una nueva sección. Si los módulos se relacionan o interactúan, se debe indicar claramente en este documento el porqué, de qué forma y con qué elementos o funciones del otro módulo se vinculan.
+2. **Registro de Cambios (Historial):** Todo cambio en el código se debe documentar obligatoriamente en el archivo `docs/historial-cambios.md`. El archivo debe estar seccionado por módulos. Si se crea un nuevo módulo, se añade una nueva sección. Si los módulos se relacionan o interactúan, se debe indicar claramente en este documento el porqué, de qué forma y con qué elementos o funciones del otro módulo se vinculan.
+3. **Sabiduría del Proyecto (Técnicas y Consejos):** Dado el perfil académico del usuario, cualquier nueva técnica de programación compleja, decisión arquitectónica inusual o solución a un dilema técnico DEBE documentarse y explicarse de forma pedagógica (sin tecnicismos excesivos, enfocándose en el *por qué* y no solo en el *cómo*) dentro del archivo `docs/tecnicas-y-consejos.md`. Esto sirve como bitácora de aprendizaje para futuros proyectos.
 
 ## Alcance de los cambios y Contexto del Chat
 

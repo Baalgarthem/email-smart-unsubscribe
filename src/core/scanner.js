@@ -6,7 +6,7 @@ import {
     obtenerTextoPropio, 
     obtenerHrefAbsoluto 
 } from '../utils/dom.js';
-import { IDENTIFICADORES, configuracion, patronHrefBaja, patronTextoRelevante } from '../config/constants.js';
+import { IDENTIFICADORES, configuracion, patronHrefBaja, patronTextoRelevante, selectoresNativos } from '../config/constants.js';
 
 export function esGmailActual() {
     return location.hostname === 'mail.google.com';
@@ -40,7 +40,11 @@ export function obtenerRaicesGmail(documentoActual) {
         'div.a3s.aiL',
         'div.a3s',
         'div[role="listitem"] div.a3s',
-        'div[role="main"] div.a3s'
+        'div[role="main"] div.a3s',
+        // Cabeceras nativas donde Gmail inyecta su botón de "Cancelar suscripción"
+        'div.gE.iv.gt',
+        'div.Ca',
+        'div[data-tooltip*="unsubscribe" i]'
     ];
 
     const raices = obtenerElementosVisiblesUnicos(
@@ -65,7 +69,10 @@ export function obtenerRaicesOutlook(documentoActual) {
         '[role="main"] [aria-label*="Message content" i]',
         '[role="main"] [aria-label*="Contenido del mensaje" i]',
         '[role="main"] [role="document"]',
-        '[role="main"] [data-is-focusable="true"] [role="document"]'
+        '[role="main"] [data-is-focusable="true"] [role="document"]',
+        // Cabeceras nativas donde Outlook inyecta "Unsubscribe"
+        '[data-testid="UnsubscribeButton"]',
+        'button[name="Unsubscribe"]'
     ];
 
     let raices = obtenerElementosVisiblesUnicos(
@@ -239,7 +246,10 @@ export function obtenerCandidatos(raiz) {
             obtenerHrefAbsoluto(elemento)
         ].join(' '));
 
+        const esNativo = selectoresNativos.some(sel => elemento.matches(sel));
+
         if (
+            esNativo ||
             patronHrefBaja.test(textoRapido) ||
             patronTextoRelevante.test(textoRapido)
         ) {

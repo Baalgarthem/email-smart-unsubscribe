@@ -51,6 +51,11 @@ export const configuracion = {
         coincidenciaDifusa: 10,
         deteccionAlgoritmicaContextual: 55,
 
+        botonNativoCorreo: 1000,
+        huellaVisualDiscreta: 25,
+        proximidadSemanticaEstricta: 40,
+        cercaniaPixelRastreo: 30,
+
         penalizacionRiesgo: -45,
         penalizacionCuenta: -30,
         penalizacionSocial: -20,
@@ -65,3 +70,11 @@ export const patronHrefBaja = /(?:unsubscribe|un[-_]?subscribe|unsub|opt[\-_]?ou
 export const patronDominioMarketing = /(?:mailchimp|mandrillapp|sendgrid|sendinblue|brevo|hubspot|salesforce|pardot|marketo|eloqua|constantcontact|activecampaign|klaviyo|iterable|mailgun|sparkpost|campaign|newsletter|mailing)/i;
 
 export const patronTextoRelevante = /unsubscribe|un\s*subscribe|opt\s*out|remove\s*me|stop\s*(?:receiving\s*)?(?:emails|messages)|darse?\s+de\s+baja|darme\s+de\s+baja|desuscrib|desinscrib|cancelar\s+(?:la\s+|mi\s+|tu\s+)?suscrip|baja\s+(?:de\s+)?suscrip|manage\s+(?:email\s+)?subscriptions|subscription\s+(?:preferences|center|centre)|preferencias?\s+(?:de\s+)?(?:correo|email|suscrip)|newsletter|boletin|boletín/i;
+
+export const selectoresNativos = [
+    // Gmail native list-unsubscribe button (often a span with 'Cancelar suscripción' or similar near the sender)
+    '.Ca', // Historically Gmail's unsubscribe button class, but it changes. 
+    'span[email="unsubscribe"]', // Fallback pattern
+    'div[data-tooltip*="unsubscribe" i]',
+    'div[data-tooltip*="cancelar suscripción" i]'
+];

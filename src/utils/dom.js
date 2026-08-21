@@ -209,3 +209,71 @@ export function obtenerElementosVisiblesUnicos(
 
     return elementos;
 }
+
+export function obtenerHuellaVisual(elemento) {
+    try {
+        const ventana = elemento.ownerDocument?.defaultView || window;
+        const estilo = ventana.getComputedStyle(elemento);
+        
+        let fontSize = parseFloat(estilo.fontSize);
+        if (isNaN(fontSize)) fontSize = 14;
+
+        // Si el color es muy claro o transparente, es más probable que lo oculten
+        const opacity = parseFloat(estilo.opacity);
+        
+        return {
+            esPequeno: fontSize <= 12,
+            esMuyPequeno: fontSize <= 10,
+            esSemiOculto: opacity < 0.6
+        };
+    } catch {
+        return { esPequeno: false, esMuyPequeno: false, esSemiOculto: false };
+    }
+}
+
+export function elementoCercaDePixelRastreo(elemento) {
+    try {
+        let actual = elemento.parentElement;
+        let pasos = 0;
+        
+        while (actual && pasos < 4) {
+            // Buscar imágenes de rastreo típicas (1x1 o display:none) en el mismo nivel
+            const imagenes = actual.querySelectorAll('img');
+            for (const img of imagenes) {
+                if (
+                    img.width <= 2 || img.height <= 2 || 
+                    img.style.display === 'none' || 
+                    img.style.visibility === 'hidden'
+                ) {
+                    return true;
+                }
+            }
+            actual = actual.parentElement;
+            pasos++;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+export function esBotonNativoDeCorreo(elemento) {
+    // Si el elemento pertenece a un contenedor de Gmail o Outlook ajeno al iframe/cuerpo del correo
+    const doc = elemento.ownerDocument;
+    
+    // Si estamos dentro de un iframe de contenido, no es el botón nativo de arriba
+    if (doc !== window.document) return false;
+    
+    let actual = elemento;
+    let pasos = 0;
+    while (actual && pasos < 6) {
+        // En Gmail el cuerpo de los correos está dentro de .a3s
+        if (actual.classList?.contains('a3s')) {
+            return false; // Está dentro del contenido, no es la cabecera nativa
+        }
+        actual = actual.parentElement;
+        pasos++;
+    }
+    
+    return true; // Asumimos que si no está en el cuerpo, es un control nativo
+}
