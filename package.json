@@ -1,0 +1,24 @@
+{
+  "name": "email-smart-unsubscribe",
+  "version": "2.8.2",
+  "description": "",
+  "main": "email-smart-unsubscribe.user.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js",
+    "build:minify": "node build.js --minify",
+    "build:watch": "node build.js --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "acorn": "^8.18.0",
+    "acorn-walk": "^8.3.5",
+    "esbuild": "^0.28.2"
+  }
+}
