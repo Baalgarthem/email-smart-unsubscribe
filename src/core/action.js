@@ -34,7 +34,6 @@ export function ejecutarElementoAccionable(elemento) {
         bubbles: true,
         cancelable: true,
         composed: true,
-        view: window,
         button: 0
     });
 
