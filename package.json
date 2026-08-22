@@ -1,6 +1,6 @@
 {
   "name": "email-smart-unsubscribe",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "description": "",
   "main": "email-smart-unsubscribe.user.js",
   "directories": {
