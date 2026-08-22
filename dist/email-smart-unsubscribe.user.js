@@ -112,9 +112,9 @@
           penalizacionOculto: -100
         }
       };
-      patronHrefBaja = /(?:unsubscribe|un[-_]?subscribe|unsub|opt[\-_]?out|remove[_-]?me|leave[_-]?list|stop[_-]?emails|email[_-]?(?:preferences|settings|profile|subscription)|subscription[_-]?(?:preferences|center|centre|settings)|manage[_-]?(?:subscriptions|preferences)|preference[_-]?(?:center|centre)|list[_-]?unsubscribe|cancel(?:ar)?[_-]?(?:subscription|suscripcion)|baja[_-]?(?:suscripcion|boletin)|desuscrib)/i;
-      patronDominioMarketing = /(?:mailchimp|mandrillapp|sendgrid|sendinblue|brevo|hubspot|salesforce|pardot|marketo|eloqua|constantcontact|activecampaign|klaviyo|iterable|mailgun|sparkpost|campaign|newsletter|mailing)/i;
-      patronTextoRelevante = /unsubscribe|un\s*subscribe|opt\s*out|remove\s*me|stop\s*(?:receiving\s*)?(?:emails|messages)|darse?\s+de\s+baja|darme\s+de\s+baja|desuscrib|desinscrib|cancelar\s+(?:la\s+|mi\s+|tu\s+)?suscrip|baja\s+(?:de\s+)?suscrip|manage\s+(?:email\s+)?subscriptions|subscription\s+(?:preferences|center|centre)|preferencias?\s+(?:de\s+)?(?:correo|email|suscrip)|newsletter|boletin|boletín/i;
+      patronHrefBaja = /(?:unsubscribe|un[-_]?subscribe|unsub|opt[\-_]?out|remove[_-]?me|leave[_-]?list|stop[_-]?emails|email[_-]?(?:preferences|settings|profile|subscription)|subscription[_-]?(?:preferences|center|centre|settings)|manage[_-]?(?:subscriptions|preferences)|preference[_-]?(?:center|centre)|list[_-]?unsubscribe|cancel(?:ar)?[_-]?(?:subscription|suscripcion)|baja[_-]?(?:suscripcion|boletin)|desuscrib|edm[_-]?setting)/i;
+      patronDominioMarketing = /(?:mailchimp|mandrillapp|sendgrid|sendinblue|brevo|hubspot|salesforce|pardot|marketo|eloqua|constantcontact|activecampaign|klaviyo|iterable|mailgun|sparkpost|campaign|newsletter|mailing|edm)/i;
+      patronTextoRelevante = /unsubscribe|un\s*subscribe|opt\s*out|remove\s*me|stop\s*(?:receiving\s*)?(?:emails|messages)|darse?\s+de\s+baja|darme\s+de\s+baja|desuscrib|desinscrib|cancelar\s+(?:la\s+|mi\s+|tu\s+)?suscrip|baja\s+(?:de\s+)?suscrip|manage\s+(?:email\s+)?subscriptions|subscription\s+(?:preferences|center|centre)|preferencias?\s+(?:de\s+)?(?:correo|email|suscrip)|newsletter|boletin|boletín|dejar\s+de\s+recibir/i;
       selectoresNativos = [
         // Gmail native list-unsubscribe button (often a span with 'Cancelar suscripción' or similar near the sender)
         ".Ca",
