@@ -35,7 +35,9 @@
     }
   };
 
-  // src/config/state.js
+/* ════════════════════════════════════════════════════════════ */
+/*                MÓDULO: src/config/state.js                 */
+/* ════════════════════════════════════════════════════════════ */
   var estado;
   var init_state = __esm({
     "src/config/state.js"() {
@@ -54,7 +56,9 @@
     }
   });
 
-  // src/config/constants.js
+/* ════════════════════════════════════════════════════════════ */
+/*              MÓDULO: src/config/constants.js               */
+/* ════════════════════════════════════════════════════════════ */
   var IDENTIFICADORES, configuracion, patronHrefBaja, patronDominioMarketing, patronTextoRelevante, selectoresNativos;
   var init_constants = __esm({
     "src/config/constants.js"() {
@@ -127,7 +131,9 @@
     }
   });
 
-  // src/utils/string.js
+/* ════════════════════════════════════════════════════════════ */
+/*                MÓDULO: src/utils/string.js                 */
+/* ════════════════════════════════════════════════════════════ */
   function normalizarTexto(texto) {
     return String(texto || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/&amp;/g, "&").replace(/[_\-]+/g, " ").replace(/\s+/g, " ");
   }
@@ -278,7 +284,9 @@
     }
   });
 
-  // src/utils/dom.js
+/* ════════════════════════════════════════════════════════════ */
+/*                  MÓDULO: src/utils/dom.js                  */
+/* ════════════════════════════════════════════════════════════ */
   function limpiarCacheContexto() {
     cacheContexto = /* @__PURE__ */ new WeakMap();
   }
@@ -493,7 +501,9 @@
     }
   });
 
-  // src/core/scanner.js
+/* ════════════════════════════════════════════════════════════ */
+/*                MÓDULO: src/core/scanner.js                 */
+/* ════════════════════════════════════════════════════════════ */
   function esGmailActual() {
     return location.hostname === "mail.google.com";
   }
@@ -701,7 +711,9 @@
     }
   });
 
-  // src/ui/interface.js
+/* ════════════════════════════════════════════════════════════ */
+/*                MÓDULO: src/ui/interface.js                 */
+/* ════════════════════════════════════════════════════════════ */
   function crearInterfaz() {
     if (estado.raizInterfaz && estado.anfitrionInterfaz?.isConnected) {
       return estado.raizInterfaz;
@@ -898,7 +910,9 @@
     }
   });
 
-  // src/core/learning.js
+/* ════════════════════════════════════════════════════════════ */
+/*                MÓDULO: src/core/learning.js                */
+/* ════════════════════════════════════════════════════════════ */
   function obtenerFrasesAprendidas() {
     try {
       if (typeof GM_getValue !== "undefined") {
@@ -937,7 +951,9 @@
     }
   });
 
-  // src/config/phrases.js
+/* ════════════════════════════════════════════════════════════ */
+/*               MÓDULO: src/config/phrases.js                */
+/* ════════════════════════════════════════════════════════════ */
   var frasesBase, aprendidas, frases;
   var init_phrases = __esm({
     "src/config/phrases.js"() {
@@ -1204,7 +1220,9 @@
     }
   });
 
-  // src/utils/math.js
+/* ════════════════════════════════════════════════════════════ */
+/*                 MÓDULO: src/utils/math.js                  */
+/* ════════════════════════════════════════════════════════════ */
   function limitarNumero(valor, minimo, maximo) {
     return Math.max(minimo, Math.min(maximo, valor));
   }
@@ -1219,7 +1237,9 @@
     }
   });
 
-  // src/core/evaluator.js
+/* ════════════════════════════════════════════════════════════ */
+/*               MÓDULO: src/core/evaluator.js                */
+/* ════════════════════════════════════════════════════════════ */
   function crearResultado(elemento, score, razones) {
     const probabilidad = convertirScoreAProbabilidad(score);
     return {
@@ -1451,7 +1471,9 @@
     }
   });
 
-  // src/core/action.js
+/* ════════════════════════════════════════════════════════════ */
+/*                 MÓDULO: src/core/action.js                 */
+/* ════════════════════════════════════════════════════════════ */
   function esProtocoloSeguro(url) {
     try {
       const destino = new URL(url, location.href);
@@ -1545,7 +1567,9 @@
     }
   });
 
-  // src/ui/button.js
+/* ════════════════════════════════════════════════════════════ */
+/*                  MÓDULO: src/ui/button.js                  */
+/* ════════════════════════════════════════════════════════════ */
   function crearBotonPrincipal() {
     const raiz = crearInterfaz();
     if (estado.botonPrincipal?.isConnected) {
@@ -1615,7 +1639,9 @@
     }
   });
 
-  // src/index.js
+/* ════════════════════════════════════════════════════════════ */
+/*                    MÓDULO: src/index.js                    */
+/* ════════════════════════════════════════════════════════════ */
   var require_index = __commonJS({
     "src/index.js"() {
       init_state();
