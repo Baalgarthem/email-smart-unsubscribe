@@ -12,7 +12,8 @@
 // @match        https://outlook.office365.com/*
 // @match        https://outlook.live.com/*
 // @match        https://navigator-lxa.mail.com/*
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @run-at       document-idle
 // ==/UserScript==
 
@@ -897,11 +898,51 @@
     }
   });
 
+  // src/core/learning.js
+  function obtenerFrasesAprendidas() {
+    try {
+      if (typeof GM_getValue !== "undefined") {
+        const guardadas = GM_getValue(CLAVE_ALMACENAMIENTO, "[]");
+        return JSON.parse(guardadas);
+      }
+    } catch (e) {
+      if (configuracion.modoDebug) console.error("Error al obtener frases aprendidas:", e);
+    }
+    return [];
+  }
+  function aprenderNuevaFrase(textoCrudo) {
+    if (!textoCrudo) return;
+    let texto = normalizarTexto(textoCrudo);
+    if (texto.length < 3 || texto.length > 50) return;
+    const memoria = obtenerFrasesAprendidas();
+    if (memoria.includes(texto)) return;
+    memoria.push(texto);
+    try {
+      if (typeof GM_setValue !== "undefined") {
+        GM_setValue(CLAVE_ALMACENAMIENTO, JSON.stringify(memoria));
+        if (configuracion.modoDebug) {
+          console.log(`[Auto-Aprendizaje] Nueva frase memorizada: "${texto}"`);
+        }
+      }
+    } catch (e) {
+      if (configuracion.modoDebug) console.error("Error al guardar nueva frase:", e);
+    }
+  }
+  var CLAVE_ALMACENAMIENTO;
+  var init_learning = __esm({
+    "src/core/learning.js"() {
+      init_string();
+      init_constants();
+      CLAVE_ALMACENAMIENTO = "esu_frases_aprendidas";
+    }
+  });
+
   // src/config/phrases.js
-  var frasesBase, frases;
+  var frasesBase, aprendidas, frases;
   var init_phrases = __esm({
     "src/config/phrases.js"() {
       init_string();
+      init_learning();
       frasesBase = {
         criticas: [
           "unsubscribe",
@@ -1155,6 +1196,10 @@
           "ingresa aqui"
         ]
       };
+      aprendidas = obtenerFrasesAprendidas();
+      if (aprendidas.length > 0) {
+        frasesBase.criticas.push(...aprendidas);
+      }
       frases = limpiarFrasesRepetidas(frasesBase);
     }
   });
@@ -1467,6 +1512,10 @@
     actualizarEstadoProcesando(true);
     try {
       ejecutarElementoAccionable(resultado.elemento);
+      const textoOriginal = resultado.elemento.innerText || resultado.elemento.textContent || "";
+      if (textoOriginal) {
+        aprenderNuevaFrase(textoOriginal);
+      }
       notificar(
         `Enlace de baja abierto. Confianza: ${resultado.porcentaje}%`,
         configuracion.colores.exito
@@ -1492,6 +1541,7 @@
       init_dom();
       init_evaluator();
       init_button();
+      init_learning();
     }
   });
 

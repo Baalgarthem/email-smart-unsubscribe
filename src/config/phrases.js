@@ -39,4 +39,12 @@ const frasesBase = {
     ]
 };
 
+import { obtenerFrasesAprendidas } from '../core/learning.js';
+
+// Inyectamos las frases memorizadas dinámicamente en el nivel más crítico
+const aprendidas = obtenerFrasesAprendidas();
+if (aprendidas.length > 0) {
+    frasesBase.criticas.push(...aprendidas);
+}
+
 export const frases = limpiarFrasesRepetidas(frasesBase);

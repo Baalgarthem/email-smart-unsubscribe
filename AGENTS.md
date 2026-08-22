@@ -23,15 +23,20 @@ El proyecto cuenta con un entorno modular gestionado con `esbuild` para generar 
 
 ## Verificación
 
-- Ejecuta `npm run build` o `npm run build:minify` según las instrucciones de `requerimientos.md` para verificar que el código transpila sin errores.
+- Ejecuta `npm run build` o `npm run build:minify` según las instrucciones de `docs/manual-herramientas.md` para verificar que el código transpila sin errores.
 - Prueba el script cargando el archivo `dist/email-smart-unsubscribe.user.js` en Tampermonkey o Violentmonkey.
 - Comprueba que el escáner funciona correctamente abriendo un newsletter en Gmail u Outlook.
 
 ## Protocolos Obligatorios
 
 1. **Gestión de Errores (Bug Trace):** Todo bug sin excepción se debe revisar, reportar y analizar desde el archivo `docs/bug-trace.md`, siguiendo estrictamente la estructura tabular y las reglas irrevocables definidas en la cabecera de ese archivo.
-2. **Registro de Cambios (Historial):** Todo cambio en el código se debe documentar obligatoriamente en el archivo `docs/historial-cambios.md`. El archivo debe estar seccionado por módulos. Si se crea un nuevo módulo, se añade una nueva sección. Si los módulos se relacionan o interactúan, se debe indicar claramente en este documento el porqué, de qué forma y con qué elementos o funciones del otro módulo se vinculan.
+2. **Registro de Cambios (Historial):** Todo cambio en el código se debe documentar obligatoriamente en el archivo `docs/historial-cambios.md`. El archivo debe estar seccionado por módulos. **REGLA OBLIGATORIA:** Si se determina que conviene crear un nuevo módulo (en lugar de inyectar código en uno existente), se debe crear una nueva sección para este módulo. Además, se deben documentar claramente las nuevas relaciones e interacciones entre módulos (por qué, de qué forma y con qué elementos o funciones se vinculan).
 3. **Sabiduría del Proyecto (Técnicas y Consejos):** Dado el perfil académico del usuario, cualquier nueva técnica de programación compleja, decisión arquitectónica inusual o solución a un dilema técnico DEBE documentarse y explicarse de forma pedagógica (sin tecnicismos excesivos, enfocándose en el *por qué* y no solo en el *cómo*) dentro del archivo `docs/tecnicas-y-consejos.md`. Esto sirve como bitácora de aprendizaje para futuros proyectos.
+4. **Formato Obligatorio de Respuesta:** En CADA UNA de tus respuestas hacia el usuario, debes incluir, sin excepción, al final:
+   - La **versión actual** del script (extraída del `package.json`).
+   - Un recordatorio del **comando manual para compilar** con esbuild (`npm run build`).
+   - Un recordatorio de los **comandos para subir de versión** (`npm version patch`, `npm version minor`, `npm version major`).
+   - El **número de bugs abiertos actualmente** (contados desde `docs/bug-trace.md`).
 
 ## Alcance de los cambios y Contexto del Chat
 

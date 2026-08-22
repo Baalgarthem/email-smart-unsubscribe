@@ -4,6 +4,7 @@ import { notificar } from '../ui/interface.js';
 import { obtenerHrefAbsoluto } from '../utils/dom.js';
 import { resultadoSigueSiendoValido } from './evaluator.js';
 import { actualizarBotonPrincipal, actualizarEstadoProcesando } from '../ui/button.js';
+import { aprenderNuevaFrase } from './learning.js';
 
 export function esProtocoloSeguro(url) {
     try {
@@ -84,6 +85,12 @@ export async function manejarClickPrincipal() {
 
     try {
         ejecutarElementoAccionable(resultado.elemento);
+
+        // Auto-aprendizaje: memorizar el texto original del enlace para futuras detecciones
+        const textoOriginal = resultado.elemento.innerText || resultado.elemento.textContent || '';
+        if (textoOriginal) {
+            aprenderNuevaFrase(textoOriginal);
+        }
 
         notificar(
             `Enlace de baja abierto. Confianza: ${resultado.porcentaje}%`,
