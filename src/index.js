@@ -1,8 +1,8 @@
-
 import { estado } from './config/state.js';
 import { IDENTIFICADORES, configuracion } from './config/constants.js';
 import { crearInterfaz } from './ui/interface.js';
 import { crearBotonPrincipal, actualizarBotonPrincipal, ocultarBotonPrincipal } from './ui/button.js';
+import { iniciarInterceptor } from './core/interceptor.js';
 
 (function () {
     'use strict';
@@ -95,6 +95,7 @@ import { crearBotonPrincipal, actualizarBotonPrincipal, ocultarBotonPrincipal } 
 
         crearInterfaz();
         crearBotonPrincipal();
+        iniciarInterceptor();
         iniciarObservadorDOM();
         observarCambiosDeRuta();
 
