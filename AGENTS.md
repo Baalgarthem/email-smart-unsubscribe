@@ -37,6 +37,7 @@ El proyecto cuenta con un entorno modular gestionado con `esbuild` para generar 
    - Un recordatorio del **comando manual para compilar** con esbuild (`npm run build`).
    - Un recordatorio de los **comandos para subir de versión** (`npm version patch`, `npm version minor`, `npm version major`).
    - El **número de bugs abiertos actualmente** (contados desde `docs/bug-trace.md`).
+5. **Sinergia y Concentración de Modelos (Pool de Técnicas):** Cada mejora u optimización aplicada, además de ser documentada, debe combinarse orgánicamente con el ecosistema actual. Todas las mejoras deben ser "cómplices perfectos" que no choquen entre sí y se complementen. El proyecto sigue una lógica de "modelos concentrados": en lugar de aislar o usar unas cuantas técnicas, se suman y unifican todas las técnicas conocidas e implementadas, creando una especie de *mod* o *pool de técnicas* unificado y armónico.
 
 ## Alcance de los cambios y Contexto del Chat
 
