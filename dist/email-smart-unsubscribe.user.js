@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Email Smart Unsubscribe
 // @namespace    https://github.com/Baalgarthem/
-// @version      2.9.5
+// @version      2.10.0
 // @description  Detecta enlaces para cancelar suscripciones en correos abiertos de Gmail y Outlook, y muestra un botón de confirmación.
 // @author       Baalgarthem
 // @icon         https://raw.githubusercontent.com/Baalgarthem/email-smart-unsubscribe/principal/media/email-smart-unsubscribe.ico
@@ -116,9 +116,9 @@
           penalizacionOculto: -100
         }
       };
-      patronHrefBaja = /(?:unsubscribe|un[-_]?subscribe|unsub|opt[\-_]?out|remove[_-]?me|leave[_-]?list|stop[_-]?emails|email[_-]?(?:preferences|settings|profile|subscription)|subscription[_-]?(?:preferences|center|centre|settings)|manage[_-]?(?:subscriptions|preferences)|preference[_-]?(?:center|centre)|list[_-]?unsubscribe|cancel(?:ar)?[_-]?(?:subscription|suscripcion)|baja[_-]?(?:suscripcion|boletin)|desuscrib|edm[_-]?setting)/i;
+      patronHrefBaja = /(?:unsubscribe|un[-_]?subscribe|unsub|opt[\-_]?out|remove[_-]?me|leave[_-]?list|stop[_-]?emails|email[_-]?(?:preferences|settings|profile|subscription)|subscription[_-]?(?:preferences|center|centre|settings)|manage[_-]?(?:subscriptions|preferences)|preference[_-]?(?:center|centre)|list[_-]?unsubscribe|cancel(?:ar)?[_-]?(?:subscription|suscripcion)|baja[_-]?(?:suscripcion|boletin)|desuscrib|edm[_-]?setting|reject=(?:begin|true|1))/i;
       patronDominioMarketing = /(?:mailchimp|mandrillapp|sendgrid|sendinblue|brevo|hubspot|salesforce|pardot|marketo|eloqua|constantcontact|activecampaign|klaviyo|iterable|mailgun|sparkpost|campaign|newsletter|mailing|edm)/i;
-      patronTextoRelevante = /unsubscribe|un\s*subscribe|opt\s*out|remove\s*me|stop\s*(?:receiving\s*)?(?:emails|messages)|darse?\s+de\s+baja|darme\s+de\s+baja|desuscrib|desinscrib|cancelar\s+(?:la\s+|mi\s+|tu\s+)?suscrip|baja\s+(?:de\s+)?suscrip|manage\s+(?:email\s+)?subscriptions|subscription\s+(?:preferences|center|centre)|preferencias?\s+(?:de\s+)?(?:correo|email|suscrip)|newsletter|boletin|boletín|dejar\s+de\s+recibir/i;
+      patronTextoRelevante = /unsubscribe|un\s*subscribe|opt\s*out|remove\s*me|stop\s*(?:receiving\s*)?(?:emails|messages)|darse?\s+de\s+baja|darme\s+de\s+baja|desuscrib|desinscrib|cancelar\s+(?:la\s+|mi\s+|tu\s+)?suscrip|baja\s+(?:de\s+)?suscrip|manage\s+(?:email\s+)?subscriptions|subscription\s+(?:preferences|center|centre)|preferencias?\s+(?:de\s+)?(?:correo|email|suscrip)|newsletter|boletin|boletín|dejar\s+de\s+recibir|seguir\s+recibiendo/i;
       selectoresNativos = [
         // Gmail native list-unsubscribe button (often a span with 'Cancelar suscripción' or similar near the sender)
         ".Ca",
@@ -1002,7 +1002,9 @@
           "opt out",
           "opt-out",
           "optout",
-          "quitarme de la lista"
+          "quitarme de la lista",
+          "seguir recibiendo",
+          "no seguir recibiendo"
         ],
         altas: [
           "manage subscriptions",
@@ -1639,6 +1641,71 @@
   });
 
 /* ════════════════════════════════════════════════════════════ */
+/*              MÓDULO: src/core/interceptor.js               */
+/* ════════════════════════════════════════════════════════════ */
+  function manejarClicGlobal(evento) {
+    const enlace = evento.target.closest("a");
+    if (!enlace) return;
+    const cuerpoCorreo = enlace.closest('.a3s, [role="main"], .allowTextSelection');
+    if (!cuerpoCorreo) return;
+    const resultado = evaluarElemento(enlace);
+    if (resultado.probabilidad > 0.25 && resultado.probabilidad < configuracion.umbralMostrar) {
+      evento.preventDefault();
+      evento.stopPropagation();
+      const textoEnlace = (enlace.innerText || enlace.textContent || "").trim();
+      const confirmar = window.confirm(
+        [
+          "ESCUDO PASIVO DE SMART UNSUBSCRIBE",
+          "",
+          "Has hecho clic en un enlace dudoso que podr\xEDa ser de desuscripci\xF3n.",
+          `Texto: "${textoEnlace}"`,
+          `Confianza heur\xEDstica: ${Math.round(resultado.probabilidad * 100)}%`,
+          "",
+          "\xBFQuieres que proceda como una cancelaci\xF3n de suscripci\xF3n y aprenda de \xE9l?"
+        ].join("\n")
+      );
+      if (confirmar) {
+        if (textoEnlace) {
+          aprenderNuevaFrase(textoEnlace);
+          notificar(`Aprendido: "${textoEnlace}"`, configuracion.colores.exito);
+        }
+        try {
+          ejecutarElementoAccionable(enlace);
+        } catch (error) {
+          notificar("Error al procesar el enlace.", configuracion.colores.peligro);
+        }
+      } else {
+        const confirmacionNavegacion = window.confirm("\xBFDeseas visitar este enlace de forma normal?");
+        if (confirmacionNavegacion) {
+          window.open(enlace.href, enlace.target || "_self");
+        }
+      }
+    } else if (resultado.probabilidad >= configuracion.umbralMostrar) {
+      const textoEnlace = (enlace.innerText || enlace.textContent || "").trim();
+      if (textoEnlace) {
+        aprenderNuevaFrase(textoEnlace);
+      }
+    }
+  }
+  function iniciarInterceptor() {
+    if (interceptorActivo) return;
+    document.addEventListener("click", manejarClicGlobal, true);
+    interceptorActivo = true;
+    console.log("[Email Smart Unsubscribe] Escudo Pasivo interceptor inicializado.");
+  }
+  var interceptorActivo;
+  var init_interceptor = __esm({
+    "src/core/interceptor.js"() {
+      init_evaluator();
+      init_constants();
+      init_interface();
+      init_learning();
+      init_action();
+      interceptorActivo = false;
+    }
+  });
+
+/* ════════════════════════════════════════════════════════════ */
 /*                    MÓDULO: src/index.js                    */
 /* ════════════════════════════════════════════════════════════ */
   var require_index = __commonJS({
@@ -1647,6 +1714,7 @@
       init_constants();
       init_interface();
       init_button();
+      init_interceptor();
       (function() {
         "use strict";
         function mutacionPerteneceAlScript(mutacion) {
@@ -1714,6 +1782,7 @@
           }
           crearInterfaz();
           crearBotonPrincipal();
+          iniciarInterceptor();
           iniciarObservadorDOM();
           observarCambiosDeRuta();
           window.setTimeout(
